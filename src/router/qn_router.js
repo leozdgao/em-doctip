@@ -1,17 +1,40 @@
-import express from 'express'
-import qs from 'querystring'
-import bodyParser from 'body-parser'
-import * as qnService from '../service/qn_service'
+import express from 'express';
+import qs from 'querystring';
+import bodyParser from 'body-parser';
+import * as qnService from '../service/qn_service';
 
 let router = express.Router();
+
+router.use((req, res, next) => {
+    qnService.initKey();
+    next();
+});
 
 /**
  * Url for token request
  */
-router.get('/token', (req, res) => {
+router.get('/uptoken', (req, res) => {
     // return upload token
     res.status(200).json({
-        token: qnService.getUploadToken()
+        uptoken: qnService.getUploadToken()
+    });
+});
+
+router.get('/downloadurl', (req, res) => {
+    let key = req.query.key;
+    res.status(200).json({
+        url: qnService.getDownloadUrl(key)
+    });
+});
+
+router.get('/rmresource', (req, res, next) => {
+    let key = req.query.key;
+    qnService.remove(key, (err, ret) => { console.log(err); console.log(ret);
+        if (err) {
+            next(err);
+        } else {
+            res.status(200).json(ret);
+        }
     });
 });
 
@@ -46,7 +69,7 @@ router.post('/callback', bodyParser.urlencoded({extended: true}), (req, res) => 
                 
         // save meta data to db
         
-        // response
+        // response to client
         res.json({ success: true });
     }
     // invalid callback request
@@ -54,3 +77,5 @@ router.post('/callback', bodyParser.urlencoded({extended: true}), (req, res) => 
         res.status(401).end();
     }
 });
+
+export default router;

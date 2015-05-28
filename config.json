@@ -1,0 +1,26 @@
+{
+    "port": 8080,
+    "qiniu": {
+        "kvs": {
+            "doc": {
+                "access_key": "mW7zd3zNY0LHwbh6loeAWDyzYYnsD5UaXPMveMBc",
+                "secret_key": "vUNx0iFBux7BHEML7VK6mcoee_RiJ16s6jcmAxMk"    
+            },
+            "image": {
+                "access_key": "",
+                "secret_key": ""
+            }
+        },
+        "mode": "",
+        "bucket": {
+            "name": "testbucket",
+            "host": "7xjb4p.com1.z0.glb.clouddn.com"
+        }
+    },
+    "release": {
+        "server": {
+            "src": "src/**/*.js",
+            "dist": "server"
+        }
+    }
+}
