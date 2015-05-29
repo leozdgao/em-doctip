@@ -12,10 +12,18 @@
             }
         },
         "mode": "",
+        "callbackUrl": "http://10.10.74.15:8080/qnservice/callback",
         "bucket": {
             "name": "testbucket",
             "host": "7xjb4p.com1.z0.glb.clouddn.com"
         }
+    },
+    "db": {
+        "connection": "mongodb://10.10.73.207:27018/Ps_Service"
+    },
+    "log": {
+        "info": "info.log",
+        "err": "err.log"
     },
     "release": {
         "server": {

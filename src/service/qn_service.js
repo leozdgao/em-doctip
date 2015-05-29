@@ -1,14 +1,25 @@
 import qn from 'qiniu';
 import qs from 'querystring';
 import crypto from 'crypto';
+import promise from 'bluebird';
 import config from '../../config.json';
 
-export function initKey () {
+/**
+ * Initialize qiniu AS/SK for file bucket.
+ */
+export function initFileBucketKey () {
     let dockv = config.qiniu.kvs.doc;
     qn.conf.ACCESS_KEY = dockv['access_key'];
     qn.conf.SECRET_KEY = dockv['secret_key'];
 }
 
+/**
+ * Check Authentication header for qiniu.
+ * @param {String} authHeader - Authentication header.
+ * @param {String} path - request path.
+ * @param {String} body - request body.
+ * @returns {boolean} valid or not.
+ */
 export function checkAuth (authHeader, path, body) {
     if (/^QBox /.test(authHeader)) {
 
@@ -37,9 +48,9 @@ export function checkAuth (authHeader, path, body) {
 export function getUploadToken () {
     
     let mode = config.qiniu.mode;
-    let putPolicy = new qn.rs.PutPolicy('testbucket');
+    let putPolicy = new qn.rs.PutPolicy(config.qiniu.bucket.name);
     if(mode == 'callback') {
-        putPolicy.callbackUrl = 'http://10.10.74.15:8080/qnservice/callback';
+        putPolicy.callbackUrl = config.qiniu.callbackUrl;
         putPolicy.callbackBody = qs.stringify({
             key: '$(key)',
             fname: '$(fname)',
@@ -72,3 +83,5 @@ export function getEncodedEntryURI(key) {
 
     return qn.util.urlsafeBase64Encode(entry);
 }
+
+export var upload = promise.promisify(qn.io.put);
