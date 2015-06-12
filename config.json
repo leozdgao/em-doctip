@@ -1,6 +1,7 @@
 {
     "port": 8000,
     "mode": "dev",
+    "path": "",
     "qiniu": {
         "kvs": {
             "doc": {
@@ -13,7 +14,6 @@
             }
         },
         "mode": "",
-        "callbackUrl": "http://10.10.74.15:8080/qnservice/callback",
         "bucket": {
             "name": "testbucket",
             "host": "7xjb4p.com1.z0.glb.clouddn.com"

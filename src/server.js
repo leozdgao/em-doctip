@@ -3,6 +3,7 @@ import express from 'express';
 import promise from 'bluebird';
 import mongoose from 'mongoose';
 import logger from './service/logger';
+import fileRouter from './router/file_router';
 import config from '../config.json';
 
 let app = express();
@@ -13,9 +14,10 @@ if(config.mode == 'dev') app.use(express.static('public'));
 
 // register routers
 // import qnRouter from './router/qn_router';
-import fileRouter from './router/file_router';
 
-app.use('/file', fileRouter);
+let mount = config.path || '/file';
+
+app.use(mount, fileRouter);
 // app.use('/qnservice', qnRouter);
 
 // handle 404
