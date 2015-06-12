@@ -9,13 +9,14 @@ let app = express();
 
 promise.promisifyAll(mongoose);
 
+if(config.mode == 'dev') app.use(express.static('public'));
+
 // register routers
-import qnRouter from './router/qn_router';
+// import qnRouter from './router/qn_router';
 import fileRouter from './router/file_router';
 
 app.use('/file', fileRouter);
-app.use('/qnservice', qnRouter);
-
+// app.use('/qnservice', qnRouter);
 
 // handle 404
 app.use((req, res, next) => {

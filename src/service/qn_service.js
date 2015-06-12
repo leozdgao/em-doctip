@@ -1,7 +1,7 @@
 import qn from 'qiniu';
 import qs from 'querystring';
 import crypto from 'crypto';
-import promise from 'bluebird';
+import Promise from 'bluebird';
 import config from '../../config.json';
 
 /**
@@ -70,11 +70,16 @@ export function getDownloadUrl(key) {
     return policy.makeRequest(baseUrl);
 }
 
-export function remove(key, cb) {
+export function remove(key) {
     let domain = config.qiniu.bucket.name,
         client = new qn.rs.Client();
-
-    client.remove(domain, key, cb);
+    
+    return new Promise((resolve, reject) => {
+        client.remove(domain, key, function(err, ret) {
+            if(err) reject(err);
+            else resolve(ret);
+        });
+    });
 }
 
 export function getEncodedEntryURI(key) {
@@ -84,4 +89,23 @@ export function getEncodedEntryURI(key) {
     return qn.util.urlsafeBase64Encode(entry);
 }
 
-export var upload = promise.promisify(qn.io.put);
+export function upload(uptoken, key, body, extra) {
+    return new Promise((resolve, reject) => {
+        qn.io.put(uptoken, key, body, extra, (err, ret) => {
+            if(err) reject(err);
+            else resolve(ret);
+        });
+    });
+}
+
+export function getFileInfo(key) {
+    let domain = config.qiniu.bucket.name,
+        client = new qn.rs.Client();
+
+    return new Promise((resolve, reject) => {
+        client.stat(domain, key, (err, ret) => {
+            if(err) reject(err);
+            else resolve(ret);
+        });
+    });
+}

@@ -3,6 +3,7 @@ import crypto from 'crypto';
 import os from 'os';
 import promise from 'bluebird';
 import File from '../model/file';
+import logger from './logger';
 import * as qnService from './qn_service';
 
 /**
@@ -19,13 +20,14 @@ export function init() {
 export function insertFile(file) {
     let upToken = qnService.getUploadToken();
     let key = generateKey();
-    let body = fs.read(file.path);
 
     return promise.promisify(fs.readFile).call(this, file.path)
         .then((data) => {
+            logger.verbose('Read file data from temp.');
             return qnService.upload(upToken, key, data);
         })
-        .then((ret) => { console.dir(ret);
+        .then((ret) => {
+            logger.verbose('File uploaded.')
             fs.unlink(file.path); // [async] don't care the result of this action.
             let fileObj = new File(fileAdaptor(file, key));
             return fileObj.saveAsync();
@@ -37,24 +39,29 @@ export function insertFile(file) {
  * @param {String} key - The key of resource.
  */
 export function removeFile(key) {
-    file.findOneAndRemoveAsync({ key: key })
-        .then(() => {
-
-        })
+    logger.verbose('Ready to remove %s.', key);
+    return File.findOneAndRemoveAsync({ key: key })
+        .then((ret) => {
+            if(!ret) return;
+            return qnService.remove(key);
+        });
 }
 
 /**
  * Get a file info, and download from qiniu.
  * @param {String} key - The key of resource.
  */
-export function getFile(key) {
-    File.findOneAsync({ key: key })
+export function getFileUrl(key) {
+    logger.verbose('Ready to get download url %s.', key);
+    return File.findOneAsync({ key: key })
         .then((file) => {
-            if(!file) throw new Error('File not found.');
-        })
-        // download
-        .then((key) => {
-
+            if(!file) {
+                let err = new Error("Can't find file from key " + key + ".");
+                err.status = 404;
+                throw err;
+            }
+            logger.verbose('Key %s existed in db.', key);
+            return [qnService.getDownloadUrl(file.key), file];
         });
 }
 
@@ -63,7 +70,16 @@ export function getFile(key) {
  * @param {String} key - The key of resource.
  */
 export function checkFile(key) {
+    return File.findOneAsync({ key: key })
+        .then((file) => {
+            if(!file) {
+                let err = new Error("Can't find file from key " + key + ".");
+                err.status = 404;
+                throw err;
+            }
 
+            return qnService.getFileInfo(key);
+        });
 }
 
 /**
@@ -76,7 +92,8 @@ function fileAdaptor(file, key) {
         key: key || generateKey(),
         meta: {
             mime: file.type,
-            size: file.size
+            size: file.size,
+            name: file.name
         }
     }
 }
