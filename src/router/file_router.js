@@ -8,11 +8,17 @@ import * as fileService from '../service/file_service';
 
 let router = express.Router();
 
+/**
+ * Route for inisiating.
+ */
 router.use((req, res, next) => {
     fileService.init();
     next();
 });
 
+/**
+ * Route for check a file existance.
+ */
 router.get('/:id/check', (req, res, next) => {
     let id = req.params.id;
     fileService.checkFile(id)

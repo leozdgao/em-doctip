@@ -15,7 +15,9 @@ export function init() {
 
 /**
  * Insert a new file, put meta data to db and upload body to qiniu.
+ *
  * @param {Object} file - The file object.
+ * @returns {Promise}
  */
 export function insertFile(file) {
     let upToken = qnService.getUploadToken();
@@ -36,7 +38,9 @@ export function insertFile(file) {
 
 /**
  * Remove a file info, and remove the resource on qiniu.
+ *
  * @param {String} key - The key of resource.
+ * @returns {Promise}
  */
 export function removeFile(key) {
     logger.verbose('Ready to remove %s.', key);
@@ -49,7 +53,9 @@ export function removeFile(key) {
 
 /**
  * Get a file info, and download from qiniu.
+ *
  * @param {String} key - The key of resource.
+ * @returns {Promise}
  */
 export function getFileUrl(key) {
     logger.verbose('Ready to get download url %s.', key);
@@ -67,7 +73,9 @@ export function getFileUrl(key) {
 
 /**
  * Check a file is exist or not.
+ *
  * @param {String} key - The key of resource.
+ * @returns {Promise}
  */
 export function checkFile(key) {
     return File.findOneAsync({ key: key })
@@ -84,6 +92,7 @@ export function checkFile(key) {
 
 /**
  * Adaptor for transform the File object to mongo model.
+ *
  * @param {Object} file - The File object.
  * @param {String} key - Given key for resource.
  */
@@ -100,6 +109,7 @@ function fileAdaptor(file, key) {
 
 /**
  * Method for generate unique key for resource.
+ *
  * @return {String} Unique key.
  */
 function generateKey() {

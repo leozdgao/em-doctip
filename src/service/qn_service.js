@@ -15,10 +15,11 @@ export function initFileBucketKey () {
 
 /**
  * Check Authentication header for qiniu.
+ *
  * @param {String} authHeader - Authentication header.
  * @param {String} path - request path.
  * @param {String} body - request body.
- * @returns {boolean} valid or not.
+ * @returns {Boolean} valid or not.
  */
 export function checkAuth (authHeader, path, body) {
     if (/^QBox /.test(authHeader)) {
@@ -42,8 +43,9 @@ export function checkAuth (authHeader, path, body) {
 
 /**
  * Generate PutPolicy for qiniu
- * 
  * DevDoc: http://developer.qiniu.com/docs/v6/api/reference/security/put-policy.html
+ * 
+ * @returns {String} upload token.
  */
 export function getUploadToken () {
     
@@ -61,6 +63,12 @@ export function getUploadToken () {
     return putPolicy.token();
 }
 
+/**
+ * Get download url from qiniu.
+ *
+ * @param {String} key - unique key of a file.
+ * @returns {String} download url.
+ */
 export function getDownloadUrl(key) {
 
     let domain = config.qiniu.bucket.host,
@@ -70,6 +78,12 @@ export function getDownloadUrl(key) {
     return policy.makeRequest(baseUrl);
 }
 
+/**
+ * Remove a file from qiniu.
+ * 
+ * @param {String} key - unique key of a file.
+ * @returns {Promise}
+ */
 export function remove(key) {
     let domain = config.qiniu.bucket.name,
         client = new qn.rs.Client();
@@ -82,13 +96,15 @@ export function remove(key) {
     });
 }
 
-export function getEncodedEntryURI(key) {
-    let domain = config.qiniu.bucket.name,
-        entry = domain + ':' + key;
-
-    return qn.util.urlsafeBase64Encode(entry);
-}
-
+/**
+ * Upload a file to qiniu.
+ * 
+ * @param {String} uptoken - upload token.
+ * @param {String} key - unique key of a file.
+ * @param {String | Buffer} body - content of the file.
+ * @param {Object} extra - extra for qiniu.
+ * @returns {Promise}
+ */
 export function upload(uptoken, key, body, extra) {
     return new Promise((resolve, reject) => {
         qn.io.put(uptoken, key, body, extra, (err, ret) => {
@@ -98,6 +114,12 @@ export function upload(uptoken, key, body, extra) {
     });
 }
 
+/**
+ * Fetch a file information from qiniu.
+ * 
+ * @param {String} key - unique key of a file.
+ * @returns {Promise}
+ */
 export function getFileInfo(key) {
     let domain = config.qiniu.bucket.name,
         client = new qn.rs.Client();
@@ -108,4 +130,17 @@ export function getFileInfo(key) {
             else resolve(ret);
         });
     });
+}
+
+/**
+ * Generate safe URI.
+ * 
+ * @param {String} key - unique key of a file.
+ * @returns {String} uri.
+ */
+export function getEncodedEntryURI(key) {
+    let domain = config.qiniu.bucket.name,
+        entry = domain + ':' + key;
+
+    return qn.util.urlsafeBase64Encode(entry);
 }

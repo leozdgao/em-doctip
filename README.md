@@ -39,7 +39,7 @@ or only do the compiling thing:
     "port": 8000,
     // if dev, a test page will be host
     "mode": "dev",
-    // mount post
+    // mount point
     "path": "",
     // config for qiniu
     "qiniu": {
