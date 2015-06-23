@@ -23,7 +23,7 @@ router.get('/:id/check', (req, res, next) => {
     let id = req.params.id;
     fileService.checkFile(id)
         .then((ret) => {
-            res.json({ exist: true });
+            res.json({ exist: !!ret });
         })
         .catch((err) => {
             if(err.code == 612) res.json({ exist: false });

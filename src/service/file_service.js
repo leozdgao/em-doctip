@@ -80,13 +80,13 @@ export function getFileUrl(key) {
 export function checkFile(key) {
     return File.findOneAsync({ key: key })
         .then((file) => {
-            if(!file) {
-                let err = new Error("Can't find file from key " + key + ".");
-                err.status = 404;
-                throw err;
-            }
-
-            return qnService.getFileInfo(key);
+            // if(!file) {
+            //     let err = new Error("Can't find file from key " + key + ".");
+            //     err.status = 404;
+            //     throw err;
+            // }
+            if(!file) return;
+            else return qnService.getFileInfo(key);
         });
 }
 
