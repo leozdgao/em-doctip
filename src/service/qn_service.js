@@ -2,7 +2,7 @@ import qn from 'qiniu';
 import qs from 'querystring';
 import crypto from 'crypto';
 import Promise from 'bluebird';
-import config from '../../config.json';
+import config from '../../config';
 
 /**
  * Initialize qiniu AS/SK for file bucket.
@@ -44,11 +44,11 @@ export function checkAuth (authHeader, path, body) {
 /**
  * Generate PutPolicy for qiniu
  * DevDoc: http://developer.qiniu.com/docs/v6/api/reference/security/put-policy.html
- * 
+ *
  * @returns {String} upload token.
  */
 export function getUploadToken () {
-    
+
     let mode = config.qiniu.mode;
     let putPolicy = new qn.rs.PutPolicy(config.qiniu.bucket.name);
     if(mode == 'callback') {
@@ -80,14 +80,14 @@ export function getDownloadUrl(key) {
 
 /**
  * Remove a file from qiniu.
- * 
+ *
  * @param {String} key - unique key of a file.
  * @returns {Promise}
  */
 export function remove(key) {
     let domain = config.qiniu.bucket.name,
         client = new qn.rs.Client();
-    
+
     return new Promise((resolve, reject) => {
         client.remove(domain, key, function(err, ret) {
             if(err) reject(err);
@@ -98,7 +98,7 @@ export function remove(key) {
 
 /**
  * Upload a file to qiniu.
- * 
+ *
  * @param {String} uptoken - upload token.
  * @param {String} key - unique key of a file.
  * @param {String | Buffer} body - content of the file.
@@ -116,7 +116,7 @@ export function upload(uptoken, key, body, extra) {
 
 /**
  * Fetch a file information from qiniu.
- * 
+ *
  * @param {String} key - unique key of a file.
  * @returns {Promise}
  */
@@ -134,7 +134,7 @@ export function getFileInfo(key) {
 
 /**
  * Generate safe URI.
- * 
+ *
  * @param {String} key - unique key of a file.
  * @returns {String} uri.
  */

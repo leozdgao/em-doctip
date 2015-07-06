@@ -1,6 +1,6 @@
 var gulp = require('gulp');
 var babel = require('gulp-babel');
-var config = require('./config.json').release;
+var config = require('./config').release;
 
 gulp.task('default', function () {
     return gulp.src(config.server.src)

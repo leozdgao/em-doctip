@@ -1,6 +1,6 @@
 import fs from 'fs';
 import util from 'util';
-import config from '../../config.json';
+import config from '../../config';
 
 /**
  * Construct a logger, it can record the verbose, info , warning, error message and

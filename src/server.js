@@ -4,7 +4,7 @@ import promise from 'bluebird';
 import mongoose from 'mongoose';
 import logger from './service/logger';
 import fileRouter from './router/file_router';
-import config from '../config.json';
+import config from '../config';
 
 let app = express();
 
@@ -30,31 +30,30 @@ app.use((err, req, res, next) => {
 });
 
 // listening
-let port = config.port || 4000;
+let port = config.port;
 app.listen(port, () => {
     logger.info('Server start and listening on port ' + port);
 });
 
 // try to connect to db
 var connected = false;
+var timeout = config.db.timeout || 5000;
 
 // set db connection config, timeout 5s
 var dbConfig = {
     server: {
-        socketOptions: { connectTimeoutMS: 5000 }
+        socketOptions: { connectTimeoutMS: timeout }
     }
 };
 
 mongoose.connect(config.db.connection, dbConfig);
 
 mongoose.connection.on("connected", () => {
-
     logger.info("Connected to DB...");
     connected = true;
 });
 
 mongoose.connection.on("disconnected", () => {
-
     // after a successful connecting,
     // mongoose will reconnect automatically if connection disconnected.
     if(!connected) {
@@ -63,7 +62,7 @@ mongoose.connection.on("disconnected", () => {
 
         setTimeout(function() {
             mongoose.connection.open(config.db.connection, dbConfig);
-        }, 5000);
+        }, timeout);
     }
 });
 
