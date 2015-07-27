@@ -3,7 +3,7 @@ var testdb = process.env['MONGO_FILE_TEST'] || "mongodb://10.10.73.207:27018/tes
 var productdb = process.env['MONGO_FILE_PRODUCT'] || "mongodb://10.10.73.207:27018/Ps_Service";
 
 module.exports = {
-    port: process.env['FILE_PORT'] || 8000,
+    port: process.env['FILE_PORT'] || 4000,
     mode: debug ? 'dev' : '',
     path: '/', // mount
     qiniu: {

@@ -51,6 +51,7 @@ export function getUploadToken () {
 
     let mode = config.qiniu.mode;
     let putPolicy = new qn.rs.PutPolicy(config.qiniu.bucket.name);
+    putPolicy.fsizeLimit = 10485760;
     if(mode == 'callback') {
         putPolicy.callbackUrl = config.qiniu.callbackUrl;
         putPolicy.callbackBody = qs.stringify({
