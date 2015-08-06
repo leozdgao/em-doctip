@@ -1,6 +1,6 @@
-# EM-FileServer
+# FileServer
 
-It's a file server for EllieMae Team. Use [qiniu](http://www.qiniu.com/) for file storage.
+It's a file server for Team. Use [qiniu](http://www.qiniu.com/) for file storage.
 
 There are RESTFul interface for it:
 
@@ -45,8 +45,8 @@ or only do the compiling thing:
     "qiniu": {
         "kvs": {
             "doc": {
-                "access_key": "mW7zd3zNY0LHwbh6loeAWDyzYYnsD5UaXPMveMBc",
-                "secret_key": "vUNx0iFBux7BHEML7VK6mcoee_RiJ16s6jcmAxMk"    
+                "access_key": "_your_access_key_",
+                "secret_key": "_your_secret_key_"    
             },
             "image": {
                 "access_key": "",
@@ -61,7 +61,7 @@ or only do the compiling thing:
     },
     // db config
     "db": {
-        "connection": "mongodb://10.10.73.207:27018/Ps_Service"
+        "connection": "mongodb://test"
     },
     // log path
     "log": {
